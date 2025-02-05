@@ -18,7 +18,14 @@ import explorer from "./routes/aiExplorer";
 const app = express();
 
 // Cors
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Allow frontend origin
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
+    allowedHeaders: ["Content-Type", "Authorization", "x-auth-token"], // Allow x-auth-token
+    credentials: false, // If sending cookies or authentication headers
+  })
+);
 
 // Body Parser
 app.use(express.json());
