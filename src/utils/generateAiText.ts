@@ -6,11 +6,21 @@ const maxTokens = process.env.MAX_TOKENS;
 const temperature = process.env.TEMPERATURE;
 const inference = new HfInference(hf_key);
 
-export const generateAiTextUtil = async (model: string, prompt: string) => {
+export const generateAiTextUtil = async (
+  model: string,
+  prompt: string,
+  systemPrompt: string
+) => {
   try {
     const out = await inference.chatCompletion({
       model,
       messages: [
+        {
+          role: "system",
+          content:
+            systemPrompt ??
+            "You are a music teacher and your name is Godwin, help with theory and fundamentals about music.",
+        },
         {
           role: "user",
           content: prompt,

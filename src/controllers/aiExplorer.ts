@@ -10,6 +10,7 @@ export const generateAiText = async (req: any, res: any) => {
   if (!userId) return res.status(401).json({ msg: "Authorization Failed" });
 
   const prompt = req.body.prompt;
+  const systemPrompt = req.body.systemPrompt;
   const modelId = req.body.model;
   if (!prompt || !modelId)
     return res.status(400).json({ msg: "Bad request: Prompt was not sent" });
@@ -21,10 +22,15 @@ export const generateAiText = async (req: any, res: any) => {
     const model = await Model.findById(modelId);
     if (!model) return res.status(404).json({ msg: "Model not found" });
 
-    if (user.tokens === 0) return res.status(400).json({ msg: "Invalid User" });
+    // if (user.tokens === 0)
+    //   return res.status(400).json({ msg: "Not Enough Tokens" });
 
     // generate ai text
-    const aiResponse = await generateAiTextUtil(model.name, prompt);
+    const aiResponse = await generateAiTextUtil(
+      model.name,
+      prompt,
+      systemPrompt
+    );
     if (!aiResponse)
       return res.status(500).json({ msg: "Internal server error" });
 
